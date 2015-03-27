@@ -1,0 +1,83 @@
+// Name: Stylus Variables
+// Author: Graffino (http=//www.graffino.com)
+
+// !Typography 
+// ==|=========================================================================	
+// Font families
+$heading-font-family = 	Arial, sans-serif 
+$text-font-family = 	Arial sans-serif
+
+// Font weight
+$ultra-light = 			100
+$thin =        			200
+$light =       			300
+$regular =     			400	
+$medium =      			500
+$semi-bold =   			600	
+$bold =        			700
+$extra-bold =  			800
+$ultra-bold =  			900
+
+// Hero title
+$h1-font-family =		$heading-font-family
+$h1-font-size =			rem(55)
+$h1-line-height =		rem(55)
+$h1-font-weight =		$regular
+$h1-color =				#fff
+
+// H2 title
+$h2-font-family =		$heading-font-family
+$h2-font-size =			rem(25)
+$h2-line-height =		rem(25)
+$h2-font-weight =		$regular
+$h2-color =				#fff
+$h2-letter-spacing =	2px
+
+
+// H3 title
+$h3-font-family =		$heading-font-family
+$h3-font-size =			rem(18)
+$h3-line-height =		rem(18)
+$h3-font-weight =		$regular
+$h3-color =				#fff
+
+// !Colors
+// ==|=========================================================================	
+
+$color-name = #fff
+
+// ! Remify & Emify values
+// ==|========================================================================= 
+
+$base-font-size = 100%
+$base-font-size-px = 16
+
+// PX to REM
+rem(value) {
+    u = unit(value)
+    return unit(value/$base-font-size-px, 'rem')
+}
+// PX to EM
+em(value) {
+    u = unit(value)
+    return unit(value/$base-font-size-px, 'em')
+}
+
+// ! Defaults
+// ==|========================================================================= 
+
+$default-font-family = 	$text-font-family
+$default-color =		#fff
+$default-font-size =	rem(16)
+$default-font-weight =	$regular
+$default-line-height =	1
+
+// !Directories
+// ==|=========================================================================
+$url-images=			"../images"
+$url-fonts=				"../fonts"
+ 
+// !Breakpoints
+// ==|=========================================================================
+
+scale = 0 320px 375px 400px 414px 500px 600px 650px 670px 700px 768px 780px 800px 850px 860px 900px 960px 990px 1020px 1100px 1120px 1240px 1920px

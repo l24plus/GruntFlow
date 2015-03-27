@@ -1,0 +1,44 @@
+// Name: Fonts
+// Author: Graffino (http://www.graffino.com)
+
+// Fonts: 
+
+// Font weight variables
+// $ultra-light = 100
+// $thin =        200
+// $light =       300
+// $regular =     400	
+// $medium =      500
+// $semi-bold =   600	
+// $bold =        700
+// $extra-bold =  800
+// $ultra-bold =  900	
+
+// Webfont mixin
+// ==|=========================================================================
+font-url(file) { return '../fonts/' + file }
+
+webfont(family, file, weight = normal, style = normal) {
+	@font-face {
+		font-family: family
+		src: url(font-url(file + '.eot'))
+		src: url(font-url(file + '.eot?#iefix')) format('embedded-opentype'),
+			url(font-url(file + '.woff')) format('woff'), 
+			url(font-url(file + '.ttf')) format('truetype'), 
+			url(font-url(file + '.svg#'+ family)) format('svg')
+		font-weight: weight
+		font-style: style
+	}
+}
+
+/* !CSS Embedded Fonts */
+/* ==|========================================================================= */
+// FontName
+// FontStyle
+webfont('FontName', 'FontFIle', 400, normal)
+
+
+
+
+
+
