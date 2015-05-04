@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 
 		// Optimize Images
 		imagemin: {
-			deploy: {
+			production: {
 				options: {
 					optimizationLevel: 7,
 					use: [
@@ -25,27 +25,21 @@ module.exports = function(grunt) {
 					progressive: true
 				},
 				files: [{
-					// Set to true to enable the following options…
 					expand: true,
-					// cwd is 'current working directory'
 					cwd: 'assets/images/src/',
 					src: ['**/*.{png,jpg}'],
-					// Could also match cwd line above. i.e. project-directory/img/
 					dest: 'assets/images/'
 				}]
 			},
-			develop: {
+			staging: {
 				options: {
 					optimizationLevel: 0,
 					progressive: false,
 				},
 				files: [{
-					// Set to true to enable the following options…
 					expand: true,
-					// cwd is 'current working directory'
 					cwd: 'assets/images/src/',
 					src: ['**/*.{png,jpg}'],
-					// Could also match cwd line above. i.e. project-directory/img/
 					dest: 'assets/images/'
 				}]
 			}				
@@ -75,8 +69,7 @@ module.exports = function(grunt) {
 		},
 		// SVG Sprite
 		svg_sprite: {
-			styl_sprite : {
-				// Target-specific file lists and/or options go here.
+			less_sprite : {
 				expand: true,
 				cwd: 'assets/images/svg',
 				src: ['*.svg'],
@@ -89,6 +82,7 @@ module.exports = function(grunt) {
 							common: '',
 							prefix: 'svg-',
 							sprite: 'sprite.svg',
+							mixin: 'sprite',
 							render: {
 								styl: {
 									template: 'assets/styl/base/sprite-mustache.styl',
@@ -117,55 +111,49 @@ module.exports = function(grunt) {
 				options: {
 					paths: [
 						'assets/styl/**/*',
-						'assets/libs/**/*'
+						'bower_components/**/*'
 					],
-					import: ['normalize', 'nib', 'rupture'],
-					compress: false
+					import: ['jeet', 'normalize', 'nib', 'rupture'],
+					compress: false,
+					sourcemap: {
+						inline: true
+					}
 				},
 				files: {
-					'assets/css/main.css': 'assets/styl/main.styl'
+					'assets/css/modules/app.css': 'assets/styl/main.styl'
 				}
 			}
 		},
-		// Bower Copy
-		bowercopy: {
-			options: {
-				// Bower components folder will be removed afterwards
-				clean: false
-			},
-			// Entire folders
-			folders: {
-				options: {
-					destPrefix: 'assets/libs/'
+		// Bower Contact		
+		bower_concat: {
+			all: {
+				dest: 'assets/js/plugins/bower.js',
+				cssDest: 'assets/css/plugins/bower.css',
+				exclude: ['jeet', 'normalize.styl', 'nib', 'rupture-by-jenius'],
+				include: [],
+				dependencies: {
+					'h5Validate' : ['jquery'],
+					'nouislider' : ['jquery']
 				},
-				files: {
-					'normalize/': 'normalize.styl/', 
-					'rupture/': '../node_modules/rupture/',
-					'loadcss/': 'loadcss/'
+				mainFiles: {
+					'srcset-poly' : ['build/srcset.js'],
+					'h5Validate' : ['jquery.h5validate.js'],
+					'slick.js' : ['slick/slick.js', 'slick/slick.css'],
+				},
+				bowerOptions: {
+					relative: false
 				}
-			},
-			// Javascript
-			js: {
-				options: {
-					destPrefix: 'assets/js/plugins'
-				},
-				files: {
-					'jquery.js': 'jquery/dist/jquery.js',
-					'modernizr.js': 'modernizr/modernizr.js'
-				},
-			},
+			}
 		},
 		// Post CSS
 		postcss: {
 			options: {
-				map: {
-					inline: false
-				},
+				map: true,
 				processors: [ 
 					require('autoprefixer-core')({browsers: 'last 2 versions'}).postcss,
 					require('csswring').postcss
-					]
-				},
+				]
+			},
 			dist: {
 				src: 'assets/css/main.css', 
 				dest: 'assets/css/main.min.css'
@@ -179,12 +167,29 @@ module.exports = function(grunt) {
 	                width: 1200,
 	                height: 900,
 	                outputfile: "assets/css/critical.min.css",
-	                filename: "assets/css/main.min.css", // Using path.resolve( path.join( ... ) ) is a good idea here
+	                filename: "assets/css/main.min.css",
 	                buffer: 800*1024,
 	                ignoreConsole: false
 	            }
 	        }
 	    },
+		// Replace stuff
+		'string-replace': {
+			inline: {
+				files: {
+					'assets/css/': 'assets/css/main.css',
+				},
+				options: {
+					replacements: [{
+						pattern: "url('example.png')",
+						replacement: ""
+					},{
+						pattern: "url('example2.png')",
+						replacement: ""						
+					}]
+				}
+			}
+		},
 	    // Lint HTML
 		htmllint: {
 			options: {
@@ -199,6 +204,11 @@ module.exports = function(grunt) {
 				eqeqeq: true,
 				eqnull: true,
 				browser: true,
+				latedef: true,
+				maxcomplexity: 6,
+				unused: true,
+				debug: true,
+				devel: true,
 				reporter: require('jshint-stylish')
 			},
 			all: {
@@ -210,16 +220,24 @@ module.exports = function(grunt) {
 		},
 		// Concatenate Modules
 		concat: {
+			options: {
+				sourceMap: true
+			},
 			js: {
-				src : ['assets/js/plugins/jquery.js', 'assets/js/plugins/*.js', 'assets/js/modules/*.js'],
-				dest : 'assets/js/main.js'
+				src: ['assets/js/plugins/*.js', 'assets/js/modules/*.js'],
+				dest: 'assets/js/main.js'
+			},
+			css: {
+				src: ['assets/css/plugins/*.css', 'assets/css/modules/*.css'],
+				dest: 'assets/css/main.css'
 			}
 		},
 		// Uglify Javascript
 		uglify: {
 			options: {
+				sourceMapIn: 'assets/js/main.js.map',
 				sourceMap: 'main.min.js.map',
-				mangle: false,
+				mangle: false
 			},
 			main: {
 				options: {
@@ -233,7 +251,6 @@ module.exports = function(grunt) {
 		// Clean stuff
 		clean: {
 			bower: ['bower_components/*'],
-			libs: ['assets/libs'],
 			css: ['assets/css'],
 			js: ['assets/js/plugins', 'assets/js/*.js', 'assets/js/*.map'],
 			images: ['assets/images/*', '!assets/images/src']
@@ -243,10 +260,10 @@ module.exports = function(grunt) {
 			// Recompile Stylus
 			stylus: {
 				files: ['assets/styl/**/*.styl'],
-				tasks: ['stylus', 'postcss'],
+				tasks: ['stylus', 'concat:css', 'string-replace', 'postcss'],
 			},
 			// Live reload CSS
-			css: {
+			livereload: {
 				files: ['assets/css/main.min.css'],
 				options: {
 					livereload: true,
@@ -262,12 +279,12 @@ module.exports = function(grunt) {
 			// Live optimize new images
 			images: {
 				files: ['assets/images/src/**/*.png', 'assets/images/src/**/*.jpg'],
-				tasks: ['imagemin:develop'],
+				tasks: ['newer:imagemin:staging'],
 			},
 			// Live generate new svgs
 			sprites: {
 				files: ['assets/images/src/svg/**/*.svg'],
-				tasks: ['svgmin', 'copy', 'svg_sprite', 'stylus', 'postcss'],
+				tasks: ['newer:svgmin', 'newer:copy', 'svg_sprite', 'stylus', 'concat:css', 'string-replace', 'postcss'],
 				options: {
 					livereload: true,
 				},
@@ -275,7 +292,7 @@ module.exports = function(grunt) {
 			// Live lint new scripts
 			scripts: {
 				files: ['assets/js/modules/*.js', 'assets/js/plugins/*.js'],
-				tasks: ['jshint', 'concat', 'uglify'],
+				tasks: ['jshint', 'concat:js', 'uglify'],
 				options: {
 					spawn: false,
 					livereload: true,
@@ -284,7 +301,7 @@ module.exports = function(grunt) {
 			// Live lint Grunt file
 			gruntfile: {
 				files: 'Gruntfile.js',
-				tasks: ['bowercopy', 'svgmin', 'copy','svg_sprite', 'stylus', 'postcss', 'htmlhint', 'jshint', 'concat', 'uglify', 'imagemin:develop'],
+				tasks: ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'string-replace', 'postcss', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy'],
 				
 			},
 			// Live lint HTML file
@@ -304,8 +321,8 @@ module.exports = function(grunt) {
 	// Concat
 	grunt.loadNpmTasks('grunt-contrib-concat');
 
-	// Bower Copy
-	grunt.loadNpmTasks('grunt-bowercopy');
+	// Bower Concat
+	grunt.loadNpmTasks('grunt-bower-concat');
 
 	// Copy
 	grunt.loadNpmTasks('grunt-contrib-copy');
@@ -340,14 +357,41 @@ module.exports = function(grunt) {
 	// SVG Sprite
 	grunt.loadNpmTasks('grunt-svg-sprite');
 	
+	// Grunt Newer
+	grunt.loadNpmTasks('grunt-newer');
+	
+	// Grunt Replace
+	grunt.loadNpmTasks('grunt-string-replace');
+	
 	// Grunt Clean
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	
 	// Run Grunt Tasks //
 	// Default
-	grunt.registerTask('default', ['bowercopy', 'svgmin', 'copy', 'svg_sprite', 'stylus', 'postcss', 'htmllint', 'jshint', 'concat', 'uglify', 'imagemin:develop', 'watch']); 
-	// Develop
-	grunt.registerTask('develop', ['clean', 'bowercopy', 'svgmin', 'copy', 'svg_sprite', 'stylus', 'postcss', 'htmllint', 'jshint', 'concat', 'uglify', 'imagemin:develop', 'criticalcss']); 
-	// Deploy
-	grunt.registerTask('deploy', ['clean', 'bowercopy', 'svgmin', 'copy', 'svg_sprite', 'stylus', 'postcss', 'concat', 'uglify', 'imagemin:deploy']); 
+	grunt.registerTask('default', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'string-replace', 'postcss', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy', 'watch']); 
+	// Staging
+	grunt.registerTask('staging', ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'string-replace', 'postcss', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy']); 
+	// Production
+	grunt.registerTask('production', ['clean', 'bower_concat', 'svgmin', 'svg_sprite', 'stylus', 'concat:css',  'string-replace', 'postcss', 'concat:js', 'uglify', 'imagemin:production', 'copy', 'criticalcss']); 
+	// Test
+	grunt.registerTask('test', ['jshint','htmllint']);
+
+	// Automate bower install
+	grunt.registerTask('bower', 'Install bower modules', function() {
+		var exec = require('child_process').exec;
+		var cb = this.async();
+		exec('bower prune; bower install', {}, function(err, stdout) {
+			console.log(stdout);
+			cb();
+		});
+	});
+	
+	// Clean
+	// grunt clean
+	// Critical CSS
+	// grunt criticalcss
+	// Test
+	// grunt test
+	// Bower
+	// grunt bower
 };

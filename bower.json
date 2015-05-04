@@ -1,19 +1,18 @@
 {
-  "name": "GruntFlowBasic",
-  "version": "0.1.0",
+  "name": "GruntFlow",
+  "version": "0.2.0",
   "authors": [
     "Graffino"
   ],
-  "description": "Grunt basic flow we use at Graffino",
-  "main": "assets/css/main.css",
+  "description": "Our grunt flow at Graffino.",
+  "main": "assets/css/main.styl",
   "keywords": [],
-  "license": "No",
+  "license": "MIT",
   "homepage": "http://graffino.com",
   "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
-    "assets/js/libs",
     "bower_components",
     "test",
     "tests"
@@ -21,8 +20,15 @@
   "devDependencies": {
     "jquery": "~2.1.1",
     "modernizr": "~2.8.3",
-    "browser-update": "~1.0.4",
+    "h5Validate": "~0.9.0",
+    "browser-update": "~1.0.6",
     "normalize.styl": "~3.0.2",
-    "loadcss": "~0.1.6"
+    "jeet": "~6.1.2",
+    "rupture-by-jenius": "~0.6.1",
+    "srcset-poly": "*",
+    "slick.js": "~1.5.2"
+  },
+  "resolutions": {
+    "jquery": "~2.1.1"
   }
 }
