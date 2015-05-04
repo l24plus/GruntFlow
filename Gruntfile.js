@@ -174,20 +174,17 @@ module.exports = function(grunt) {
 	        }
 	    },
 		// Replace stuff
-		'string-replace': {
-			inline: {
-				files: {
-					'assets/css/': 'assets/css/main.css',
-				},
-				options: {
-					replacements: [{
-						pattern: "url('example.png')",
-						replacement: ""
-					},{
-						pattern: "url('example2.png')",
-						replacement: ""						
-					}]
-				}
+		replace: {
+			example: {
+				src: ['assets/css/main.css'],
+				dest: ['assets/css/main.css'],
+				replacements: [{
+					from: "url('example.png')",
+					to: ""
+				},{
+					from: "url('example@2x.png')",
+					to: ""
+				}]
 			}
 		},
 	    // Lint HTML
@@ -260,7 +257,7 @@ module.exports = function(grunt) {
 			// Recompile Stylus
 			stylus: {
 				files: ['assets/styl/**/*.styl'],
-				tasks: ['stylus', 'concat:css', 'string-replace', 'postcss'],
+				tasks: ['stylus', 'concat:css', 'replace', 'postcss'],
 			},
 			// Live reload CSS
 			livereload: {
@@ -284,7 +281,7 @@ module.exports = function(grunt) {
 			// Live generate new svgs
 			sprites: {
 				files: ['assets/images/src/svg/**/*.svg'],
-				tasks: ['newer:svgmin', 'newer:copy', 'svg_sprite', 'stylus', 'concat:css', 'string-replace', 'postcss'],
+				tasks: ['newer:svgmin', 'newer:copy', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss'],
 				options: {
 					livereload: true,
 				},
@@ -301,7 +298,7 @@ module.exports = function(grunt) {
 			// Live lint Grunt file
 			gruntfile: {
 				files: 'Gruntfile.js',
-				tasks: ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'string-replace', 'postcss', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy'],
+				tasks: ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy'],
 				
 			},
 			// Live lint HTML file
@@ -361,18 +358,18 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-newer');
 	
 	// Grunt Replace
-	grunt.loadNpmTasks('grunt-string-replace');
+	grunt.loadNpmTasks('grunt-text-replace');
 	
 	// Grunt Clean
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	
 	// Run Grunt Tasks //
 	// Default
-	grunt.registerTask('default', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'string-replace', 'postcss', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy', 'watch']); 
+	grunt.registerTask('default', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy', 'watch']); 
 	// Staging
-	grunt.registerTask('staging', ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'string-replace', 'postcss', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy']); 
+	grunt.registerTask('staging', ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy']); 
 	// Production
-	grunt.registerTask('production', ['clean', 'bower_concat', 'svgmin', 'svg_sprite', 'stylus', 'concat:css',  'string-replace', 'postcss', 'concat:js', 'uglify', 'imagemin:production', 'copy', 'criticalcss']); 
+	grunt.registerTask('production', ['clean', 'bower_concat', 'svgmin', 'svg_sprite', 'stylus', 'concat:css',  'replace', 'postcss', 'concat:js', 'uglify', 'imagemin:production', 'copy', 'criticalcss']); 
 	// Test
 	grunt.registerTask('test', ['jshint','htmllint']);
 

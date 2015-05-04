@@ -41,9 +41,9 @@
     "grunt-html": "^4.0.1",
     "grunt-newer": "^1.1.0",
     "grunt-postcss": "^0.3.0",
-    "grunt-string-replace": "^1.0.0",
     "grunt-svg-sprite": "^1.1.1",
     "grunt-svgmin": "^2.0.1",
+    "grunt-text-replace": "^0.4.0",
     "jshint-stylish": "^1.0.1"
   },
   "dependencies": {
