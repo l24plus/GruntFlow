@@ -1,22 +1,112 @@
+//
 // Name: Common
 // Author: Graffino (http://www.graffino.com)
+//
 
-// !Common 
-// ==|=========================================================================	
-//Global
-* { 
-	box-sizing: border-box
-}
+/**
+ * Globals
+ */
 
-.container {
-	center(rem(1150))
-	padding: 0 rem(15)
-	
+// Border-box
+* {
+    box-sizing: border-box;
 }
+// HTML
 html {
-	font-size: $base-font-size-px
-	
-	+below(960px) {
-		font-size: 16px
-	}
+    font-size: $base-font-size-px;
+
+    +below($desktop) {
+        font-size: 14px;
+    }
+    +below($large) {
+        font-size: 13px;
+    }
+    +below($small) {
+        font-size: 12px;
+    }
+}
+// Body
+body {
+    // Defaults
+    min-width: rem(320);
+    font-family: $default-font-family;
+    font-size: 1em;
+    line-height: 1.5;
+}
+// Container
+.container {
+    cf();
+    center(rem(1150));
+}
+// Header
+.header { }
+
+/**
+ * Helpers
+ */
+.h {
+    &-show-for {
+        &-medium-up {
+            +below($medium) {
+                display: none !important;
+            }
+        }
+        &-medium-down {
+            +above($medium + 1) {
+                display: none !important;
+            }
+        }
+        &-tablet-up {
+            +below($tablet) {
+                display: none !important;
+            }
+        }
+        &-tablet-down {
+            +above($tablet + 1) {
+                display: none !important;
+            }
+        }
+        &-small-up {
+            +below($small) {
+                display: none !important;
+            }
+        }
+        &-small-down {
+            +above($small + 1) {
+                display: none !important;
+            }
+        }
+    }
+    &-hide-for {
+        &-tablet-up {
+            +above($tablet +1) {
+                display: none !important;
+            }
+        }
+        &-tablet-down {
+            +below($tablet) {
+                display: none !important;
+            }
+        }
+        &-small-up {
+            +above($small +1) {
+                display: none !important;
+            }
+        }
+        &-small-down {
+            +below($small) {
+                display: none !important;
+            }
+        }
+        &-xsmall-up {
+            +above($xsmall +1) {
+                display: none !important;
+            }
+        }
+        &-xsmall-down {
+            +below($xsmall) {
+                display: none !important;
+            }
+        }
+    }
 }

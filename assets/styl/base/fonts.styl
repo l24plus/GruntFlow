@@ -1,44 +1,37 @@
+//
 // Name: Fonts
 // Author: Graffino (http://www.graffino.com)
+//
 
-// Fonts: 
+/**
+ *  Extra Light, Ultra Light = 100
+ *  Light, Thin = 200
+ *  Book, Demi = 300
+ *  Normal, Regular = 400
+ *  Medium = 500
+ *  SemiBold, Demibold = 600
+ *  Bold = 700
+ *  Black, ExtraBold, Heavy = 800
+ *  Extra Black, Fat, Poster, UltraBlack = 900
+ */
 
-// Font weight variables
-// $ultra-light = 100
-// $thin =        200
-// $light =       300
-// $regular =     400	
-// $medium =      500
-// $semi-bold =   600	
-// $bold =        700
-// $extra-bold =  800
-// $ultra-bold =  900	
-
-// Webfont mixin
-// ==|=========================================================================
-font-url(file) { return '../fonts/' + file }
-
+/*
+ * Font mixin
+ */
 webfont(family, file, weight = normal, style = normal) {
-	@font-face {
-		font-family: family
-		src: url(font-url(file + '.eot'))
-		src: url(font-url(file + '.eot?#iefix')) format('embedded-opentype'),
-			url(font-url(file + '.woff')) format('woff'), 
-			url(font-url(file + '.ttf')) format('truetype'), 
-			url(font-url(file + '.svg#'+ family)) format('svg')
-		font-weight: weight
-		font-style: style
-	}
+    @font-face {
+        font-family: family;
+        src: url('../fonts/' + file + '.woff2') format('woff2'),
+             url('../fonts/' + file + '.woff') format('woff'),
+             url('../fonts/' + file + '.ttf') format('truetype');
+        font-weight: weight;
+        font-style: style;
+    }
 }
 
-/* !CSS Embedded Fonts */
-/* ==|========================================================================= */
-// FontName
-// FontStyle
-webfont('FontName', 'FontFIle', 400, normal)
-
-
-
-
-
-
+/**
+ * Embedded fonts
+ */
+ // Font Name
+ // Font Style
+ webfont('Font Name', 'File Name', FontWeight, FontStyle);

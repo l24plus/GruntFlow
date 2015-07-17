@@ -1,0 +1,27 @@
+//
+// Name: Plugins
+// Author: Graffino (http://www.graffino.com)
+//
+
+/**
+ * Magnific Popup Plugin
+ */
+
+// Overlay at start
+.mfp-fade.mfp-bg {
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+}
+// Overlay animate in
+.mfp-fade.mfp-bg.mfp-ready { opacity: 0.8; }
+// Overlay animate out
+.mfp-fade.mfp-bg.mfp-removing { opacity: 0; }
+// Content at start
+.mfp-fade.mfp-wrap .mfp-content {
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+}
+// Content animate in
+.mfp-fade.mfp-wrap.mfp-ready .mfp-content { opacity: 1; }
+// Content animate out
+.mfp-fade.mfp-wrap.mfp-removing .mfp-content { opacity: 0; }

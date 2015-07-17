@@ -1,83 +1,103 @@
+//
 // Name: Stylus Variables
 // Author: Graffino (http=//www.graffino.com)
+//
 
-// !Typography 
-// ==|=========================================================================	
-// Font families
-$heading-font-family = 	Arial, sans-serif 
-$text-font-family = 	Arial sans-serif
+/**
+ *  Typography
+ */
 
-// Font weight
-$ultra-light = 			100
-$thin =        			200
-$light =       			300
-$regular =     			400	
-$medium =      			500
-$semi-bold =   			600	
-$bold =        			700
-$extra-bold =  			800
-$ultra-bold =  			900
+$serif-font-family        = FontName, Georgia, "Times New Roman", Times, serif;
+$sans-font-family         = FontName, Helvetica, Arial, sans-serif;
+$cursive-font-family      = FontName, "Comic Sans MS", cursive, sans-serif;
+$default-font-family      = $serif-font-family;
 
-// Hero title
-$h1-font-family =		$heading-font-family
-$h1-font-size =			rem(55)
-$h1-line-height =		rem(55)
-$h1-font-weight =		$regular
-$h1-color =				#fff
+/**
+ * Headings
+ */
 
-// H2 title
-$h2-font-family =		$heading-font-family
-$h2-font-size =			rem(25)
-$h2-line-height =		rem(25)
-$h2-font-weight =		$regular
-$h2-color =				#fff
-$h2-letter-spacing =	2px
+// hero
+$h-hero-font-family       = $serif-font-family;
+$h-hero-font-size         = rem(35);
+$h-hero-font-weight       = normal;
+$h-hero-line-height       = 1.3;
 
+// h1
+$h-large-font-family      = $sans-font-family;
+$h-large-font-size        = rem(60);
+$h-large-font-weight      = normal;
+$h-large-line-height      = 1.1;
 
-// H3 title
-$h3-font-family =		$heading-font-family
-$h3-font-size =			rem(18)
-$h3-line-height =		rem(18)
-$h3-font-weight =		$regular
-$h3-color =				#fff
+// h2
+$h-normal-font-family     = $sans-font-family;
+$h-normal-font-size       = rem(38);
+$h-normal-font-weight     = normal;
+$h-normal-line-height     = 1.1;
 
-// !Colors
-// ==|=========================================================================	
+// h3
+$h-medium-font-family     = $cursive-font-family;
+$h-medium-font-size       = rem(40);
+$h-medium-font-weight     = normal;
+$h-medium-line-height     = 1;
 
-$color-name = #fff
+// h4
+$h-small-font-family      = $cursive-font-family;
+$h-small-font-size        = rem(28);
+$h-small-font-weight      = normal;
+$h-small-line-height      = 1.1;
 
-// ! Remify & Emify values
-// ==|========================================================================= 
+/**
+ * Colors
+ */
 
-$base-font-size = 100%
-$base-font-size-px = 16
+$color-brand-white        = #fff;
+$color-brand-black        = #000;
+$color-brand-grey         = #767676;
 
-// PX to REM
+$color-text-on-bright     = #000;
+$color-text-on-dark       = #fff;
+$color-text-emphasis      = $color-brand-grey;
+
+$color-heading-on-bright  = #000;
+$color-heading-on-dark    = #fff;
+
+/**
+ * Remify & Emify values
+ */
+
+$base-font-size           = 100%;
+$base-font-size-px        = 16px;
+
 rem(value) {
     u = unit(value)
     return unit(value/$base-font-size-px, 'rem')
 }
-// PX to EM
+
 em(value) {
     u = unit(value)
     return unit(value/$base-font-size-px, 'em')
 }
 
-// ! Defaults
-// ==|========================================================================= 
+/**
+ * Folders
+ */
 
-$default-font-family = 	$text-font-family
-$default-color =		#fff
-$default-font-size =	rem(16)
-$default-font-weight =	$regular
-$default-line-height =	1
+$url-images               =    "../images";
+$url-fonts                =    "../fonts";
 
-// !Directories
-// ==|=========================================================================
-$url-images=			"../images"
-$url-fonts=				"../fonts"
- 
-// !Breakpoints
-// ==|=========================================================================
+/**
+ * Breakpoints
+ */
 
-scale = 0 320px 375px 400px 414px 500px 600px 650px 670px 700px 768px 780px 800px 850px 860px 900px 960px 990px 1020px 1100px 1120px 1240px 1920px
+$xlarge                   = 1249px;
+$desktop                  = 1119px;
+$large                    = 1049px;
+$medium                   = 939px;
+$tablet                   = 767px;
+$small                    = 639px;
+$xsmall                   = 479px;
+$iphone6p                 = 413px;
+$iphone6                  = 374px;
+$mobile                   = 319px;
+
+scale = 0 319px 360px 374px 413px 479px 639px 767px 939px 1049px 1149px 1249px;

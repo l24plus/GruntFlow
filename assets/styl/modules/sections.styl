@@ -1,0 +1,166 @@
+//
+// Name: Sections
+// Author: Graffino (http://www.graffino.com)
+//
+
+/**
+ * Sections modules
+ */
+.section {
+    position: relative;
+    padding: rem(20);
+
+// Backgrounds
+    &.-background-image { }
+    &.-bright {
+        color: #000;
+        background-color: #fff;
+    }
+    &.-dark {
+        background-color: #000;
+        color: #fff;
+    }
+    &.-align-center { text-align: center; }
+
+// Font sizes
+    &.-font-size {
+        &-medium {
+            font-size: rem(21);
+            line-height: 1.7;
+        }
+        &-normal {
+            font-size: rem(19);
+            line-height: 1.9;
+        }
+        &-small {
+            font-size: rem(17);
+            line-height: 1.7;
+        }
+    }
+
+// Helpers
+    &.-no-padding { padding: 0; }
+    &.-half-padding { padding: 0; }
+
+// Headings
+    h1 {
+        font-family: $h-large-font-family;
+        font-size: $h-large-font-size;
+        font-weight: $h-large-font-weight;
+        line-height: $h-large-line-height;
+    }
+    h2 {
+        font-family: $h-normal-font-family;
+        font-size: $h-normal-font-size;
+        font-weight: $h-normal-font-weight;
+        line-height: $h-normal-line-height;
+        margin: 0;
+        text-transform: uppercase;
+    }
+    h3 {
+        font-family: $h-medium-font-family;
+        font-size: $h-medium-font-size;
+        font-weight: $h-medium-font-weight;
+        line-height: $h-medium-line-height;
+        margin-bottom: 0;
+    }
+    h4 {
+        font-family: $h-small-font-family;
+        font-size: $h-small-font-size;
+        font-weight: $h-small-font-weight;
+        line-height: $h-small-line-height;
+    }
+    .heading {
+        &.-size-large {
+            @extend .section h1;
+        }
+        &.-size-normal {
+            @extend .section h2;
+        }
+        &.-size-medium {
+            @extend .section h3;
+        }
+        &.-size-small {
+            @extend .section h4;
+        }
+        &.-align-center {
+            text-align: center;
+        }
+        &.-no-margin-bottom {
+            margin-bottom: 0;
+        }
+        &.-no-margin-top {
+            margin-top: 0;
+        }
+        &.-color-black {
+            color: $color-brand-black;
+        }
+        a {
+            color: currentColor
+            text-decoration: none;
+            &:hover { color: currentColor; }
+        }
+    }
+
+// Images
+    .image {
+        width: 100%;
+        height: auto;
+
+        &.-size-half {
+            display: block;
+            margin: 0 auto;
+            width: 50%;
+        }
+    }
+
+// Other typography
+    em, .emphasis {
+        color: $color-brand-black;
+    }
+
+    hr, .separator {
+        height: 0;
+        margin: rem(50) auto;
+        border-style: solid;
+        border-color: $color-brand-white;
+        border-width: 0 0 2px 0;
+
+        &.-color-black { border-color: #000; }
+        &.-no-margin { margin: 0 auto; }
+    }
+    u, .underline {
+        position: relative;
+        text-decoration: none;
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: block;
+            border-bottom: 1px solid currentColor;
+        }
+    }
+    
+// Footer
+    .footer { }
+
+// Columns
+    .columns {
+        position: relative;
+        cf();
+
+        &__six {
+            col(1/2, cycle: 2);
+
+            +below($medium) {
+                col(1/2, cycle: 2);
+            }
+
+            +below($tablet) {
+                col(1, uncycle: 2);
+            }
+        }
+    }
+}
