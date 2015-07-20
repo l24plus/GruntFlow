@@ -6,7 +6,10 @@
 /**
  *  Global Vars
  */
-
+ // Scroll
+ var scrollPoolingDelay     = 250;
+ var scrollEvent            = false;
+ 
  /**
   * [gruntflow Object]
   * @type {Object}
