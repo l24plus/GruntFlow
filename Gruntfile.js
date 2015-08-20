@@ -3,8 +3,8 @@
 // Author: Graffino (http://www.graffino.com)
 //
 module.exports = function(grunt) {
-    var mozjpeg = require('imagemin-mozjpeg');
-    var pngquant = require('imagemin-pngquant');
+    var imageminMozjpeg = require('imagemin-mozjpeg');
+    var imageminPngquant = require('imagemin-pngquant');
 
     grunt.initConfig({
         // Read Package Information
@@ -23,8 +23,8 @@ module.exports = function(grunt) {
                 options: {
                     optimizationLevel: 7,
                     use: [
-                            mozjpeg({quality: '65-80'}),
-                            pngquant({ quality: '65-80', speed: 1 })
+                            imageminMozjpeg({ quality: '85' }),
+                            imageminPngquant({ quality: '85', speed: 1 })
                         ],
                     progressive: true
                 },
@@ -115,6 +115,7 @@ module.exports = function(grunt) {
                 options: {
                     paths: [
                         'assets/styl/**/*',
+                        'bower_components/**/*'
                     ],
                     compress: false,
                     sourcemap: {
@@ -129,11 +130,11 @@ module.exports = function(grunt) {
         // Bower Contact
         bower_concat: {
             all: {
-                dest: 'assets/js/plugins/bower.js',
-                cssDest: 'assets/css/plugins/bower.css',
-                exclude: ['jeet', 'normalize.styl', 'rupture-by-jenius'],
-                include: [],
-                includeDev: true,
+                dest    : 'assets/js/plugins/bower.js',
+                cssDest : 'assets/css/plugins/bower.css',
+                exclude : ['jeet', 'normalize.styl', 'rupture-by-jenius'],
+                include : [],
+                includeDev : true,
                 dependencies: {
                     'h5Validate'       : 'jquery'
                 },
@@ -143,6 +144,9 @@ module.exports = function(grunt) {
                     'fontfaceobserver' : 'fontfaceobserver.js',
                     'slick.js'         : ['slick/slick.js', 'slick/slick.css'],
                 },
+                bowerOptions: {
+                    relative   : false,
+                }
             }
         },
         // Post CSS
@@ -170,7 +174,8 @@ module.exports = function(grunt) {
                     outputfile: "assets/css/critical.min.css",
                     filename: "assets/css/main.min.css",
                     buffer: 800*1024,
-                    ignoreConsole: false
+                    ignoreConsole: false,
+                    forceInclude: ['']
                 }
             }
         },
@@ -254,6 +259,29 @@ module.exports = function(grunt) {
             js: ['assets/js/plugins', 'assets/js/*.js', 'assets/js/*.map'],
             images: ['assets/images/*', '!assets/images/src']
         },
+        // Bump version
+        bump: {
+          options: {
+            files: ['package.json', 'bower.json'],
+            updateConfigs: [],
+            commit: true,
+            commitMessage: 'Release v%VERSION%',
+            commitFiles: ['package.json', 'bower.json'],
+            createTag: true,
+            tagName: 'v%VERSION%',
+            tagMessage: 'Version %VERSION%',
+            push: true,
+            pushTo: 'upstream',
+            gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+            globalReplace: false,
+            prereleaseName: false,
+            regExp: false
+          }
+        },
+        // Run things in paralell
+        concurrent: {
+            stuff_to_run: ['stylus', 'concat:js'],
+        },
         // Watch for Changes
         watch: {
             // Recompile Stylus
@@ -300,7 +328,7 @@ module.exports = function(grunt) {
             // Live lint Grunt file
             gruntfile: {
                 files: 'Gruntfile.js',
-                tasks: ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy'],
+                tasks: ['bower', 'bower_concat','newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy'],
 
             },
             // Live lint HTML file
@@ -315,7 +343,7 @@ module.exports = function(grunt) {
         },
     });
 
-	/**
+    /**
      * Load Grunt Modules
      */
 
@@ -367,7 +395,13 @@ module.exports = function(grunt) {
     // Grunt Clean
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-	/**
+    // Grunt Bump
+    grunt.loadNpmTasks('grunt-bump');
+
+    // Grunt Concurrent
+    grunt.loadNpmTasks('grunt-concurrent');
+
+    /**
      * Run Grunt Tasks
      */
 
@@ -380,22 +414,174 @@ module.exports = function(grunt) {
     // Test
     grunt.registerTask('test', ['jshint','htmllint']);
 
-    // Automate bower install
-    grunt.registerTask('bower', 'Install bower modules', function() {
-        var exec = require('child_process').exec;
-        var cb = this.async();
-        exec('bower prune; bower install', {}, function(err, stdout) {
-            console.log(stdout);
-            cb();
+    /**
+     * NPM modules handling
+     */
+    // TODO: Implement bower modules update (next major release)
+    // Install npm updates
+    grunt.registerTask('update-npm', 'Update package.json and update npm modules', function() {
+        grunt.log.writeln('If you get an error here, run "npm install -g npm-check-updates".');
+        grunt.task.run('npm-write-new');
+        grunt.task.run('npm-update');
+    });
+    // Check for npm module updates
+    grunt.registerTask('npm-check', 'Check for npm modules updates', function() {
+        var done = this.async();
+
+        grunt.log.writeln('Checking for npm modules updates ...');
+
+        grunt.util.spawn({
+            cmd: 'ncu',
+            args: '',
+            opts: {
+                stdio: 'inherit',
+            }
+        }, function () {
+            grunt.log.writeln('No files were modified.');
+            done();
         });
     });
+    // Check for global npm module updates
+    grunt.registerTask('npm-check-global', 'Check for global npm modules updates', function() {
+        var done = this.async();
 
-    // Clean
+        grunt.log.writeln('Checking for global npm modules updates ...');
+
+        grunt.util.spawn({
+            cmd: 'ncu',
+            args: ['-g'],
+            opts: {
+                stdio: 'inherit',
+            }
+        }, function () {
+            grunt.log.writeln('No files were modified.');
+            done();
+        });
+    });
+    // Write new versions to packages.json
+    grunt.registerTask('npm-write-new', 'Write new versions to package.json', function() {
+        var done = this.async();
+
+        grunt.log.writeln('Checking for npm modules updates ...');
+
+        grunt.util.spawn({
+            cmd: 'ncu',
+            args: ['-u'],
+            opts: {
+                stdio: 'inherit',
+            }
+        }, function () {
+            grunt.log.writeln('New versions were written to "package.json".');
+            done();
+        });
+    });
+    // Update npm modules
+    grunt.registerTask('npm-update', 'Update npm modules', function() {
+        var done = this.async();
+
+        grunt.log.writeln('Installing npm modules updates ...');
+
+        grunt.util.spawn({
+            cmd: 'npm',
+            args: ['update','--loglevel','warn'],
+            opts: {
+                stdio: 'inherit',
+            }
+        }, function () {
+            grunt.log.writeln('NPM modules were updated.');
+            done();
+        });
+    });
+    /**
+     * Bower modules handling
+     */
+    // Install or update bower modules
+    grunt.registerTask('bower', 'Install or update bower modules', function() {
+        grunt.task.run('bower-prune');
+        grunt.task.run('bower-install');
+    });
+    // Update bower modules
+    grunt.registerTask('bower-install', 'Install bower modules', function() {
+        var done = this.async();
+
+        grunt.log.writeln('Installing bower modules ...');
+
+        grunt.util.spawn({
+            cmd: 'bower',
+            args: ['install'],
+            opts: {
+                stdio: 'inherit',
+            }
+        }, function () {
+            grunt.log.writeln('Bower modules were installed.');
+            done();
+        });
+    });
+    // Prune extraneous bower modules
+    grunt.registerTask('bower-prune', 'Prune extraneous bower modules', function() {
+        var done = this.async();
+
+        grunt.log.writeln('Pruning extraneous bower modules ...');
+
+        grunt.util.spawn({
+            cmd: 'bower',
+            args: ['prune'],
+            opts: {
+                stdio: 'inherit',
+            }
+        }, function () {
+            grunt.log.writeln('Extranous bower modules were removed');
+            done();
+        });
+    });
+    /**
+     *  Clean
+     */
     // grunt clean
-    // Critical CSS
+
+    /**
+     *  Critical CSS
+     */
     // grunt criticalcss
-    // Test
+
+    /**
+     *  Test
+     */
     // grunt test
-    // Bower
+
+    /**
+     *  Bower
+     */
+    // grunt bower
+
+    /**
+     *  NPM Update Packages
+     */
+    // grunt npm-update
+
+    /**
+     *  Bump
+     */
+    // grunt bump
+    // grunt bump:patch
+    // grunt bump:minor
+    // grunt bump:major
+    // grunt bump:git
+    // grunt bump --setversion=2.0.1
+    // grunt bump --dry-run
+    //
+    // grunt bump-only:minor
+    // grunt changelog
+    // grunt bump-commit
+
+    /**
+     * NPM modules handling
+     */
+    // grunt npm-check
+    // grunt update-npm
+
+    /**
+     * Bower modules handling
+     */
     // grunt bower
 };
