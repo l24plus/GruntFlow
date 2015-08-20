@@ -9,7 +9,7 @@
  // Scroll
  var scrollPoolingDelay     = 250;
  var scrollEvent            = false;
- 
+
  /**
   * [gruntflow Object]
   * @type {Object}
@@ -20,7 +20,7 @@ var gruntflow = {
         // Links actions
         gruntflow.linksHandler();
 
-        // Links actions
+        // Fonts hander
         gruntflow.fontsHandler();
 
         // Detect browsers
