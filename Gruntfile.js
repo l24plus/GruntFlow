@@ -193,6 +193,13 @@ module.exports = function(grunt) {
                 }]
             }
         },
+        // Lint Stylus
+        stylint: {
+            options: {
+                configFile: '.stylintrc'
+            },
+            src: ['assets/styl/**/*.styl']
+        },
         // Lint HTML
         htmllint: {
             options: {
@@ -368,6 +375,9 @@ module.exports = function(grunt) {
     // Critical CSS
     grunt.loadNpmTasks('grunt-criticalcss');
 
+    // Lint Stylus
+    grunt.loadNpmTasks('grunt-stylint');
+
     // Lint HTML
     grunt.loadNpmTasks('grunt-html');
 
@@ -406,13 +416,13 @@ module.exports = function(grunt) {
      */
 
     // Default
-    grunt.registerTask('default', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy', 'watch']);
+    grunt.registerTask('default', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'stylint', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy', 'watch']);
     // Staging
     grunt.registerTask('staging', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy']);
     // Production
     grunt.registerTask('production', ['clean', 'bower', 'bower_concat', 'svgmin', 'svg_sprite', 'stylus', 'concat:css',  'replace', 'postcss', 'concat:js', 'uglify', 'imagemin:production', 'copy', 'criticalcss']);
     // Test
-    grunt.registerTask('test', ['jshint','htmllint']);
+    grunt.registerTask('test', ['stylint', 'htmllint', 'jshint']);
 
     /**
      * NPM modules handling
