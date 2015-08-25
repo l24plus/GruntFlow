@@ -6,6 +6,9 @@
 /**
  *  Global Vars
  */
+ // Linting exceptions
+ /* global FontFaceObserver */
+
  // Scroll
  var scrollPoolingDelay     = 250;
  var scrollEvent            = false;
@@ -66,7 +69,7 @@ var gruntflow = {
     detectBrowser: function() {
         // Initialize function
         function __init() {
-            isIE = detectIE();
+            var isIE = detectIE();
             // Add class to HTML element
             if (isIE) { $('html').addClass('ie '+isIE); }
         }
