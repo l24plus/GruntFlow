@@ -73,12 +73,19 @@ module.exports = function(grunt) {
         },
         // SVG Sprite
         svg_sprite: {
-            less_sprite : {
+            stylus_sprite : {
                 expand: true,
                 cwd: 'assets/images/svg',
                 src: ['*.svg'],
                 dest: 'assets/images/',
                 options: {
+                    shape : {
+                        spacing: {
+                            box: 'content',
+                            // Change this on reslicing
+                            padding: 0
+                        }
+                    },
                     mode: {
                         css: {
                             bust: false,
@@ -108,6 +115,13 @@ module.exports = function(grunt) {
                 src: 'assets/images/src/favicon.ico',
                 dest: 'assets/images/favicon.ico',
             },
+        },
+        // Lint Stylus
+        stylint: {
+            options: {
+                configFile: '.stylintrc'
+            },
+            src: ['assets/styl/**/*.styl']
         },
         // Compile Stylus
         stylus: {
@@ -192,13 +206,6 @@ module.exports = function(grunt) {
                     to: ""
                 }]
             }
-        },
-        // Lint Stylus
-        stylint: {
-            options: {
-                configFile: '.stylintrc'
-            },
-            src: ['assets/styl/**/*.styl']
         },
         // Lint HTML
         htmllint: {
@@ -294,7 +301,7 @@ module.exports = function(grunt) {
             // Recompile Stylus
             stylus: {
                 files: ['assets/styl/**/*.styl'],
-                tasks: ['stylus', 'concat:css', 'replace', 'postcss'],
+                tasks: ['stylint', 'stylus', 'concat:css', 'replace', 'postcss'],
             },
             // Live reload CSS
             livereload: {
@@ -335,7 +342,7 @@ module.exports = function(grunt) {
             // Live lint Grunt file
             gruntfile: {
                 files: 'Gruntfile.js',
-                tasks: ['bower', 'bower_concat','newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy'],
+                tasks: ['bower', 'bower_concat','newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'stylint', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy'],
 
             },
             // Live lint HTML file
@@ -422,7 +429,7 @@ module.exports = function(grunt) {
     // Production
     grunt.registerTask('production', ['clean', 'bower', 'bower_concat', 'svgmin', 'svg_sprite', 'stylus', 'concat:css',  'replace', 'postcss', 'concat:js', 'uglify', 'imagemin:production', 'copy', 'criticalcss']);
     // Test
-    grunt.registerTask('test', ['stylint', 'htmllint', 'jshint']);
+    grunt.registerTask('test', ['jshint', 'stylint', 'htmllint']);
 
     /**
      * NPM modules handling
