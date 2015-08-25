@@ -208,25 +208,16 @@ module.exports = function(grunt) {
             }
         },
         // Lint HTML
-        htmllint: {
+        htmlhint: {
             options: {
-                force: true
+                htmlhintrc: '.htmlhintrc'
             },
-            all: ["*.html"]
+            src: ["*.html"]
         },
         // Lint Javascript
         jshint: {
             options: {
-                force: true,
-                curly: true,
-                eqeqeq: true,
-                eqnull: true,
-                browser: true,
-                latedef: true,
-                maxcomplexity: 6,
-                unused: true,
-                debug: true,
-                devel: true,
+                jshintrc: '.jshintrc',
                 reporter: require('jshint-stylish')
             },
             all: {
@@ -342,13 +333,13 @@ module.exports = function(grunt) {
             // Live lint Grunt file
             gruntfile: {
                 files: 'Gruntfile.js',
-                tasks: ['bower', 'bower_concat','newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'stylint', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy'],
+                tasks: ['bower', 'bower_concat','newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'stylint', 'htmlhint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy'],
 
             },
             // Live lint HTML file
             html: {
                 files: ['*.html'],
-                tasks: ['htmllint'],
+                tasks: ['htmlhint'],
                 options: {
                     spawn: false,
                     livereload: true,
@@ -386,7 +377,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-stylint');
 
     // Lint HTML
-    grunt.loadNpmTasks('grunt-html');
+    grunt.loadNpmTasks('grunt-htmlhint');
 
     // Lint JS
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -423,13 +414,13 @@ module.exports = function(grunt) {
      */
 
     // Default
-    grunt.registerTask('default', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'stylint', 'htmllint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy', 'watch']);
+    grunt.registerTask('default', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'stylint', 'htmlhint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy', 'watch']);
     // Staging
     grunt.registerTask('staging', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy']);
     // Production
     grunt.registerTask('production', ['clean', 'bower', 'bower_concat', 'svgmin', 'svg_sprite', 'stylus', 'concat:css',  'replace', 'postcss', 'concat:js', 'uglify', 'imagemin:production', 'copy', 'criticalcss']);
     // Test
-    grunt.registerTask('test', ['jshint', 'stylint', 'htmllint']);
+    grunt.registerTask('test', ['jshint', 'stylint', 'htmlhint']);
 
     /**
      * NPM modules handling
