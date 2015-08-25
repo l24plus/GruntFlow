@@ -13,12 +13,12 @@
 // Backgrounds
     &.-background-image { }
     &.-bright {
-        color: #000;
-        background-color: #fff;
+        color: black;
+        background-color: white;
     }
     &.-dark {
-        background-color: #000;
-        color: #fff;
+        background-color: black;
+        color: white;
     }
     &.-align-center { text-align: center; }
 
@@ -72,16 +72,16 @@
     }
     .heading {
         &.-size-large {
-            @extend .section h1;
+            @extends .section h1; // @stylint ignore
         }
         &.-size-normal {
-            @extend .section h2;
+            @extends .section h2; // @stylint ignore
         }
         &.-size-medium {
-            @extend .section h3;
+            @extends .section h3; // @stylint ignore
         }
         &.-size-small {
-            @extend .section h4;
+            @extends .section h4; // @stylint ignore
         }
         &.-align-center {
             text-align: center;
@@ -96,9 +96,9 @@
             color: $color-brand-black;
         }
         a {
-            color: currentColor
+            color: currentColor; // @stylint ignore
             text-decoration: none;
-            &:hover { color: currentColor; }
+            &:hover { color: currentColor; } // @stylint ignore
         }
     }
 
@@ -126,7 +126,7 @@
         border-color: $color-brand-white;
         border-width: 0 0 2px 0;
 
-        &.-color-black { border-color: #000; }
+        &.-color-black { border-color: black; }
         &.-no-margin { margin: 0 auto; }
     }
     u, .underline {
@@ -142,7 +142,7 @@
             border-bottom: 1px solid currentColor;
         }
     }
-    
+
 // Footer
     .footer { }
 

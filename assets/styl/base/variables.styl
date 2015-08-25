@@ -50,16 +50,16 @@ $h-small-line-height      = 1.1;
  * Colors
  */
 
-$color-brand-white        = #fff;
-$color-brand-black        = #000;
+$color-brand-white        = white;
+$color-brand-black        = black;
 $color-brand-grey         = #767676;
 
-$color-text-on-bright     = #000;
-$color-text-on-dark       = #fff;
+$color-text-on-bright     = black;
+$color-text-on-dark       = white;
 $color-text-emphasis      = $color-brand-grey;
 
-$color-heading-on-bright  = #000;
-$color-heading-on-dark    = #fff;
+$color-heading-on-bright  = black;
+$color-heading-on-dark    = white;
 
 /**
  * Remify & Emify values
@@ -68,22 +68,20 @@ $color-heading-on-dark    = #fff;
 $base-font-size           = 100%;
 $base-font-size-px        = 16px;
 
-rem(value) {
-    u = unit(value)
-    return unit(value/$base-font-size-px, 'rem')
+rem($value) {
+    return unit($value/$base-font-size-px, "rem");
 }
 
-em(value) {
-    u = unit(value)
-    return unit(value/$base-font-size-px, 'em')
+em($value) {
+    return unit($value/$base-font-size-px, "em");
 }
 
 /**
  * Folders
  */
 
-$url-images               =    "../images";
-$url-fonts                =    "../fonts";
+$url-images               = "../images";
+$url-fonts                = "../fonts";
 
 /**
  * Breakpoints
@@ -100,4 +98,4 @@ $iphone6p                 = 413px;
 $iphone6                  = 374px;
 $mobile                   = 319px;
 
-scale = 0 319px 360px 374px 413px 479px 639px 767px 939px 1049px 1149px 1249px;
+$scale = 0 319px 360px 374px 413px 479px 639px 767px 939px 1049px 1149px 1249px;

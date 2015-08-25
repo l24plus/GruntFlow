@@ -6,7 +6,7 @@
 /**
  * Mustache template
  */
-
+// @stylint off
 {{#hasMixin}}{{mixinName}}() {
     background-image: url("../images/{{{sprite}}}");
     background-size: rem({{spriteWidth}}) rem({{spriteHeight}});
@@ -21,7 +21,7 @@
     background-repeat: no-repeat;
 }
 {{/hasMixin}}{{#shapes}}{{#selector.shape}}{{#escape}}{{expression}}() { {{/escape}}{{^last}},{{/last}}
-{{/selector.shape}}    {{^hasCommon}}{{#hasMixin}}{{mixinName}}() {{/hasMixin}}{{^hasMixin}}@extend ${{commonName}};{{/hasMixin}}
+{{/selector.shape}}    {{^hasCommon}}{{#hasMixin}}{{mixinName}}() {{/hasMixin}}{{^hasMixin}}@extends${{commonName}};{{/hasMixin}}
     {{/hasCommon}}background-position: rem({{position.absolute.x}}) rem({{position.absolute.y}});{{#dimensions.inline}}
     width: rem({{width.outer}});
     height: rem({{height.outer}});{{/dimensions.inline}}
@@ -32,3 +32,4 @@
 }{{/dimensions.extra}}
 
 {{/shapes}}
+// @stylint on
