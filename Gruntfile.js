@@ -178,6 +178,17 @@ module.exports = function(grunt) {
                 dest: 'assets/css/main.min.css'
             }
         },
+        // Un CSS
+        uncss: {
+            dist: {
+                options: {
+                    ignore: [/is-.*/, /has-.*/, /ui-state.*/, /mfp-.*/, /picker.*/]
+                },
+                files: {
+                    'assets/css/main.min.css': ['index.html']
+                }
+            }
+        },
         // Find critical CSS
         criticalcss: {
             custom: {
@@ -185,8 +196,8 @@ module.exports = function(grunt) {
                     url: '<%=  pkg.devpage %>',
                     width: 1200,
                     height: 900,
-                    outputfile: "assets/css/critical.min.css",
-                    filename: "assets/css/main.min.css",
+                    outputfile: 'assets/css/critical.min.css',
+                    filename: 'assets/css/main.min.css',
                     buffer: 800*1024,
                     ignoreConsole: false,
                     forceInclude: ['']
@@ -199,11 +210,11 @@ module.exports = function(grunt) {
                 src: ['assets/css/main.css'],
                 dest: ['assets/css/main.css'],
                 replacements: [{
-                    from: "url('example.png')",
-                    to: ""
+                    from: 'url("example.png")',
+                    to: ''
                 },{
-                    from: "url('example@2x.png')",
-                    to: ""
+                    from: 'url("example@2x.png")',
+                    to: ''
                 }]
             }
         },
@@ -212,7 +223,7 @@ module.exports = function(grunt) {
             options: {
                 htmlhintrc: '.htmlhintrc'
             },
-            src: ["*.html"]
+            src: ['*.html']
         },
         // Lint Javascript
         jshint: {
@@ -370,6 +381,9 @@ module.exports = function(grunt) {
     // CSS Post Processors
     grunt.loadNpmTasks('grunt-postcss');
 
+    // UnCSS
+    grunt.loadNpmTasks('grunt-uncss');
+
     // Critical CSS
     grunt.loadNpmTasks('grunt-criticalcss');
 
@@ -414,11 +428,11 @@ module.exports = function(grunt) {
      */
 
     // Default
-    grunt.registerTask('default', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'stylint', 'htmlhint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy', 'watch']);
+    grunt.registerTask('default', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'stylint', 'htmlhint', 'jshint', 'concat:js', 'uglify', 'uncss', 'newer:imagemin:staging', 'newer:copy', 'watch']);
     // Staging
-    grunt.registerTask('staging', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy']);
+    grunt.registerTask('staging', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'concat:js', 'uglify', 'uncss', 'newer:imagemin:staging', 'newer:copy']);
     // Production
-    grunt.registerTask('production', ['clean', 'bower', 'bower_concat', 'svgmin', 'svg_sprite', 'stylus', 'concat:css',  'replace', 'postcss', 'concat:js', 'uglify', 'imagemin:production', 'copy', 'criticalcss']);
+    grunt.registerTask('production', ['clean', 'bower', 'bower_concat', 'svgmin', 'svg_sprite', 'stylus', 'concat:css',  'replace', 'postcss', 'concat:js', 'uglify', 'uncss', 'imagemin:production', 'copy', 'criticalcss']);
     // Test
     grunt.registerTask('test', ['jshint', 'stylint', 'htmlhint']);
 

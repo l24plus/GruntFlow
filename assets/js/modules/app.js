@@ -54,10 +54,10 @@ var gruntflow = {
     fontsHandler: function() {
         // Initialize function
         function __init() {
-            var observer = new FontFaceObserver( "TrendSansOne" );
+            var observer = new FontFaceObserver( 'TrendSansOne' );
             // Add fonts-class when fonts are loaded
             observer.check().then( function() {
-                document.documentElement.className += " fonts-loaded";
+                document.documentElement.className += ' fonts-loaded';
             });
         }
 
