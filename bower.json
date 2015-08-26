@@ -27,7 +27,7 @@
     "browser-update": "~1.3.0",
     "fontfaceobserver": "~1.4.12",
     "srcset-poly": "*",
-    "slick.js": "~1.5.5",
+    "slick.js": "~1.5.8",
     "matchHeight": "~0.6.0",
     "velocity": "~1.2.2",
     "magnific-popup": "~1.0.0"
