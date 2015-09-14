@@ -6,34 +6,83 @@
 /**
  *  Global Vars
  */
- // Linting exceptions
- /* global FontFaceObserver */
+// Linting exceptions
+/* global FontFaceObserver, PointerEventsPolyfill */
 
- // Scroll
- var scrollPoolingDelay     = 250;
- var scrollEvent            = false;
+// Global
+var $html                      = $('html');
+var $window                    = $(window);
+var fontFaceObserverName       = 'Arial';
 
- /**
-  * [gruntflow Object]
-  * @type {Object}
-  */
-var gruntflow = {
+// Scroll
+var scrollPoolingDelay         = 250;
+var scrollEvent                = false;
+
+// Validate
+var $validate                  = $('.js-validate');
+
+/**
+ * [graffino Object]
+ * @type {Object}
+ */
+var graffino = {
 
     init: function() {
+        // Console handler
+        graffino.consoleHandler();
+
         // Links actions
-        gruntflow.linksHandler();
+        graffino.linksHandler();
 
         // Fonts hander
-        gruntflow.fontsHandler();
+        graffino.fontsHandler();
 
         // Detect browsers
-        gruntflow.detectBrowser();
+        graffino.detectBrowser();
+        
+        // Pointer events
+        // Plugin: https://github.com/kmewhort/pointer_events_polyfill
+        graffino.pointerEvents();
 
         // Scroll events
-        gruntflow.scrollHandler();
+        graffino.scrollHandler();
 
         // Resize events
-        gruntflow.resizeHandler();
+        graffino.resizeHandler();
+
+        // Validate
+        // Plugin: https://github.com/ericelliott/h5Validate/
+        graffino.validate();
+    },
+
+    // Console handler
+    consoleHandler: function () {
+        // Initialize function
+        function __init () {
+            // Avoid `console` errors in browsers that lack a console.
+            var method;
+            var noop = function () {};
+            var methods = [
+                'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+                'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+                'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+                'timeline', 'timelineEnd', 'timeStamp', 'trace', 'warn'
+            ];
+            var length = methods.length;
+            var console = (window.console = window.console || {});
+
+            while (length--) {
+                method = methods[length];
+
+                // Only stub undefined methods.
+                if (!console[method]) {
+                    console[method] = noop;
+                }
+            }
+        }
+
+        // Initialize module
+        return __init();
     },
 
     // Links handler
@@ -54,10 +103,10 @@ var gruntflow = {
     fontsHandler: function() {
         // Initialize function
         function __init() {
-            var observer = new FontFaceObserver( 'TrendSansOne' );
+            var observer = new FontFaceObserver(fontFaceObserverName);
             // Add fonts-class when fonts are loaded
             observer.check().then( function() {
-                document.documentElement.className += ' fonts-loaded';
+                $html.addClass(' fonts-loaded');
             });
         }
 
@@ -66,12 +115,29 @@ var gruntflow = {
     },
 
     // Detect browsers
-    detectBrowser: function() {
+    detectBrowser: function(action) {
+        // Set variable to false if not defined
+        action = action || false;
+        
         // Initialize function
         function __init() {
             var isIE = detectIE();
-            // Add class to HTML element
-            if (isIE) { $('html').addClass('ie '+isIE); }
+            var isIOS = detectIOS();
+            var isIOS8 = detectIOS8();
+
+            switch(action) {
+                case 'ie':
+                   return isIE;
+                case 'ios':
+                    return isIOS;
+                case 'ios8':
+                    return isIOS8;
+                default:
+                    if (isIE) { $html.addClass('ie '+isIE); }
+                    if (isIOS) { $html.addClass('ios'); }
+                    if (isIOS8) { $html.addClass('ios8'); }
+                break;
+            }
         }
 
         // Detect IE
@@ -93,7 +159,59 @@ var gruntflow = {
             // Other browser
             return false;
         }
+        // Detect iOS
+        function detectIOS () {
+            var deviceAgent = window.navigator.userAgent.toLowerCase();
+            return /(iphone|ipod|ipad).*/.test(deviceAgent)  && !window.MSStream;
+        }
+        
+        // Detect iOS8
+        function detectIOS8 () {
+            var deviceAgent = window.navigator.userAgent.toLowerCase();
+            return /(iphone|ipod|ipad).* os 8_/.test(deviceAgent)  && !window.MSStream;
+        }
+        
+        // Initialize module
+        return __init();
+    },
 
+    // Pointer events (adds support for IE)
+    // Plugin: https://github.com/kmewhort/pointer_events_polyfill
+    pointerEvents: function() {
+    
+        // Initialize function
+        function __init() {
+            // Initialize polyfill
+            PointerEventsPolyfill.initialize({});
+        
+            // Disable pointer events on iOS drag to prevent scroll stopping when
+            // dragging on form elements (iOS workaround)
+            if (graffino.detectBrowser('ios')) {
+                setPointerEvents('none');
+
+                $(document).on('touchstart', function() {
+                    setPointerEvents('auto');
+                });
+
+                $(document).on('touchmove', function() {
+                    setPointerEvents('none');
+                });
+
+                $(document).on('touchend', function() {
+                    setTimeout(function() {
+                        setPointerEvents('none');
+                    }, 1000);
+                });
+            }
+        }
+        
+        function setPointerEvents(pointerEventsValue) {
+            var $nodes = $('input, textarea');
+
+            $.each($nodes, function(i, $node) {
+                $($node).css('pointer-events', pointerEventsValue);
+            });
+        }
         // Initialize module
         return __init();
     },
@@ -134,17 +252,17 @@ var gruntflow = {
 
         // Fire after scroll stopped for 250ms
         function scrollStopped() {
-            // Do stuff
+
         }
 
         // Fire instantly (performance issue)
         function scrollInstantly() {
-            // Do stuff
+
         }
 
         // Fire on scroll in 250ms intervals
         function scrollThrottled() {
-            // Do stuff
+
         }
 
         // Initialize module
@@ -155,9 +273,24 @@ var gruntflow = {
     resizeHandler: function() {
         // Initialize function
         function __init() {
-            $(window).on('resize', function() {
+            $window.on('resize', function() {
                 // Do stuff
             });
+        }
+
+        // Initialize module
+        return __init();
+    },
+
+    // Validate
+    // https://github.com/ericelliott/h5Validate/
+    validate: function() {
+        // Initialize function
+        function __init() {
+
+            if ($validate.length > 0) {
+                $validate.h5Validate();
+            }
         }
 
         // Initialize module
@@ -170,7 +303,7 @@ var gruntflow = {
  */
 jQuery(document).ready(function() {
     // Init scripts
-    gruntflow.init();
+    graffino.init();
 });
 
 /**

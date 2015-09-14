@@ -30,7 +30,8 @@
     "slick.js": "~1.5.8",
     "matchHeight": "~0.6.0",
     "velocity": "~1.2.2",
-    "magnific-popup": "~1.0.0"
+    "magnific-popup": "~1.0.0",
+    "pointer-events-poly": "*"
   },
   "resolutions": {
     "jquery": "~2.1.4"

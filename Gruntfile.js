@@ -115,6 +115,10 @@ module.exports = function(grunt) {
                 src: 'assets/images/src/favicon.ico',
                 dest: 'assets/images/favicon.ico',
             },
+            pinicon: {
+                src: 'assets/images/svg/no-sprite/pin-icon.svg',
+                dest: 'assets/images/pin-icon.svg',
+            },
         },
         // Lint Stylus
         stylint: {
@@ -144,19 +148,18 @@ module.exports = function(grunt) {
         // Bower Contact
         bower_concat: {
             all: {
-                dest    : 'assets/js/plugins/bower.js',
-                cssDest : 'assets/css/plugins/bower.css',
-                exclude : ['jeet', 'normalize.styl', 'rupture-by-jenius'],
-                include : [],
+                dest: 'assets/js/plugins/bower.js',
+                cssDest: 'assets/css/plugins/bower.css',
+                exclude: ['jeet', 'normalize.styl', 'rupture-by-jenius'],
+                include: [],
                 includeDev : true,
                 dependencies: {
-                    'h5Validate'       : 'jquery'
+                    'h5Validate' : ['jquery'],
+                    'nouislider' : ['jquery']
                 },
                 mainFiles: {
-                    'srcset-poly'      : 'build/srcset.js',
-                    'h5Validate'       : 'jquery.h5validate.js',
-                    'fontfaceobserver' : 'fontfaceobserver.js',
-                    'slick.js'         : ['slick/slick.js', 'slick/slick.css'],
+                    'srcset-poly' : ['build/srcset.js'],
+                    'h5Validate'  : ['jquery.h5validate.js'],
                 },
                 bowerOptions: {
                     relative   : false,
@@ -168,7 +171,7 @@ module.exports = function(grunt) {
             options: {
                 map: true,
                 processors: [
-                    require('autoprefixer-core')({browsers:['last 2 versions']}),
+                    require('autoprefixer')({browsers:['last 2 versions']}),
                     require('postcss-quantity-queries'),
                     require('csswring')
                 ]
@@ -182,7 +185,7 @@ module.exports = function(grunt) {
         uncss: {
             dist: {
                 options: {
-                    ignore: [/is-.*/, /has-.*/, /ui-state.*/, /mfp-.*/, /picker.*/]
+                    ignore: [/is-.*/, /has-.*/, /ui-state.*/, /mfp-.*/, /.*placeholder.*/, /progress.*/]
                 },
                 files: {
                     'assets/css/main.min.css': ['index.html']
@@ -281,9 +284,9 @@ module.exports = function(grunt) {
             files: ['package.json', 'bower.json'],
             updateConfigs: [],
             commit: true,
-            commitMessage: 'Release v%VERSION%',
+            commitMessage: 'Bump to release v%VERSION%',
             commitFiles: ['package.json', 'bower.json'],
-            createTag: true,
+            createTag: false,
             tagName: 'v%VERSION%',
             tagMessage: 'Version %VERSION%',
             push: false,
@@ -303,7 +306,7 @@ module.exports = function(grunt) {
             // Recompile Stylus
             stylus: {
                 files: ['assets/styl/**/*.styl'],
-                tasks: ['stylint', 'stylus', 'concat:css', 'replace', 'postcss'],
+                tasks: ['stylint', 'stylus', 'concat:css', 'replace', 'postcss', 'uncss'],
             },
             // Live reload CSS
             livereload: {
@@ -327,7 +330,7 @@ module.exports = function(grunt) {
             // Live generate new svgs
             sprites: {
                 files: ['assets/images/src/svg/**/*.svg'],
-                tasks: ['newer:svgmin', 'newer:copy', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss'],
+                tasks: ['newer:svgmin', 'newer:copy', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'uncss'],
                 options: {
                     livereload: true,
                 },
@@ -344,13 +347,13 @@ module.exports = function(grunt) {
             // Live lint Grunt file
             gruntfile: {
                 files: 'Gruntfile.js',
-                tasks: ['bower', 'bower_concat','newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'stylint', 'htmlhint', 'jshint', 'concat:js', 'uglify', 'newer:imagemin:staging', 'newer:copy'],
+                tasks: ['bower', 'bower_concat','newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'stylint', 'htmlhint', 'jshint', 'concat:js', 'uglify', 'uncss', 'newer:imagemin:staging', 'newer:copy'],
 
             },
             // Live lint HTML file
             html: {
                 files: ['*.html'],
-                tasks: ['htmlhint'],
+                tasks: ['htmlhint', 'stylint', 'stylus', 'concat:css', 'replace', 'postcss', 'uncss'],
                 options: {
                     spawn: false,
                     livereload: true,
@@ -444,6 +447,7 @@ module.exports = function(grunt) {
     grunt.registerTask('update-npm', 'Update package.json and update npm modules', function() {
         grunt.log.writeln('If you get an error here, run "npm install -g npm-check-updates".');
         grunt.task.run('npm-write-new');
+        grunt.task.run('npm-prune');
         grunt.task.run('npm-update');
     });
     // Check for npm module updates
@@ -494,6 +498,23 @@ module.exports = function(grunt) {
             }
         }, function () {
             grunt.log.writeln('New versions were written to "package.json".');
+            done();
+        });
+    });
+    // Prune extraneous npm modules
+    grunt.registerTask('npm-prune', 'Prune npm modules', function() {
+        var done = this.async();
+
+        grunt.log.writeln('Pruning npm modules updates ...');
+
+        grunt.util.spawn({
+            cmd: 'npm',
+            args: ['prune','--loglevel','warn'],
+            opts: {
+                stdio: 'inherit',
+            }
+        }, function () {
+            grunt.log.writeln('NPM modules were pruned.');
             done();
         });
     });
