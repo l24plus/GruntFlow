@@ -148,18 +148,20 @@ module.exports = function(grunt) {
         // Bower Contact
         bower_concat: {
             all: {
-                dest: 'assets/js/plugins/bower.js',
-                cssDest: 'assets/css/plugins/bower.css',
-                exclude: ['jeet', 'normalize.styl', 'rupture-by-jenius'],
-                include: [],
+                dest    : 'assets/js/plugins/bower.js',
+                cssDest : 'assets/css/plugins/bower.css',
+                exclude : ['jeet', 'normalize.styl', 'rupture-by-jenius'],
+                include : [],
                 includeDev : true,
                 dependencies: {
                     'h5Validate' : ['jquery'],
                     'nouislider' : ['jquery']
                 },
                 mainFiles: {
-                    'srcset-poly' : ['build/srcset.js'],
-                    'h5Validate'  : ['jquery.h5validate.js'],
+                    'srcset-poly'      : 'build/srcset.js',
+                    'h5Validate'       : 'jquery.h5validate.js',
+                    'fontfaceobserver' : 'fontfaceobserver.js',
+                    'slick.js'         : ['slick/slick.js', 'slick/slick.css'],
                 },
                 bowerOptions: {
                     relative   : false,
@@ -306,7 +308,7 @@ module.exports = function(grunt) {
             // Recompile Stylus
             stylus: {
                 files: ['assets/styl/**/*.styl'],
-                tasks: ['stylint', 'stylus', 'concat:css', 'replace', 'postcss', 'uncss'],
+                tasks: ['stylint', 'stylus', 'process-css'],
             },
             // Live reload CSS
             livereload: {
@@ -330,7 +332,7 @@ module.exports = function(grunt) {
             // Live generate new svgs
             sprites: {
                 files: ['assets/images/src/svg/**/*.svg'],
-                tasks: ['newer:svgmin', 'newer:copy', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'uncss'],
+                tasks: ['newer:svgmin', 'newer:copy', 'svg_sprite', 'stylus', 'process-css'],
                 options: {
                     livereload: true,
                 },
@@ -347,13 +349,13 @@ module.exports = function(grunt) {
             // Live lint Grunt file
             gruntfile: {
                 files: 'Gruntfile.js',
-                tasks: ['bower', 'bower_concat','newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'stylint', 'htmlhint', 'jshint', 'concat:js', 'uglify', 'uncss', 'newer:imagemin:staging', 'newer:copy'],
+                tasks: ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'process-css', 'test', 'process-js', 'newer:imagemin:staging', 'newer:copy'],
 
             },
             // Live lint HTML file
             html: {
                 files: ['*.html'],
-                tasks: ['htmlhint', 'stylint', 'stylus', 'concat:css', 'replace', 'postcss', 'uncss'],
+                tasks: ['test'],
                 options: {
                     spawn: false,
                     livereload: true,
@@ -431,14 +433,38 @@ module.exports = function(grunt) {
      */
 
     // Default
-    grunt.registerTask('default', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'stylint', 'htmlhint', 'jshint', 'concat:js', 'uglify', 'uncss', 'newer:imagemin:staging', 'newer:copy', 'watch']);
+    grunt.registerTask('default', ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'process-css', 'test', 'process-js', 'newer:imagemin:staging', 'newer:copy', 'watch']);
     // Staging
-    grunt.registerTask('staging', ['bower', 'bower_concat', 'newer:svgmin', 'svg_sprite', 'stylus', 'concat:css', 'replace', 'postcss', 'concat:js', 'uglify', 'uncss', 'newer:imagemin:staging', 'newer:copy']);
+    grunt.registerTask('staging', ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'process-css', 'process-js', 'newer:imagemin:staging', 'newer:copy']);
     // Production
-    grunt.registerTask('production', ['clean', 'bower', 'bower_concat', 'svgmin', 'svg_sprite', 'stylus', 'concat:css',  'replace', 'postcss', 'concat:js', 'uglify', 'uncss', 'imagemin:production', 'copy', 'criticalcss']);
-    // Test
+    grunt.registerTask('production', ['clean', 'bower', 'svgmin', 'svg_sprite', 'stylus', 'process-css', 'process-js', 'imagemin:production', 'copy', 'criticalcss']);
+    
+    /**
+     * Test
+     */
     grunt.registerTask('test', ['jshint', 'stylint', 'htmlhint']);
 
+    /**
+     * Process CSS
+     */
+    // TODO: Update when this is fixed
+    grunt.registerTask('process-css', 'Process CSS', function() {
+        grunt.task.run('concat:css');
+        grunt.task.run('replace');
+        grunt.task.run('postcss');
+        grunt.task.run('uncss');
+        // This is a workaround for postcss
+        grunt.task.run('postcss');
+    });
+    
+    /**
+     * Process JS
+     */
+    grunt.registerTask('process-js', 'Process JS', function() {
+        grunt.task.run('concat:js');
+        grunt.task.run('uglify');
+    });
+    
     /**
      * NPM modules handling
      */
@@ -542,6 +568,7 @@ module.exports = function(grunt) {
     grunt.registerTask('bower', 'Install or update bower modules', function() {
         grunt.task.run('bower-prune');
         grunt.task.run('bower-install');
+        grunt.task.run('bower_concat');
     });
     // Update bower modules
     grunt.registerTask('bower-install', 'Install bower modules', function() {
