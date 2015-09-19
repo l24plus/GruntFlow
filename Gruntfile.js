@@ -187,7 +187,7 @@ module.exports = function(grunt) {
         uncss: {
             dist: {
                 options: {
-                    ignore: [/is-.*/, /has-.*/, /ui-state.*/, /mfp-.*/, /.*placeholder.*/, /progress.*/]
+                    ignore: [/is-.*/, /has-.*/, /ui-state.*/, /mfp-.*/, /picker.*/, /select2.*/, /map.*/, /twitter.*/, /tt-.*/, /ui-select.*/]
                 },
                 files: {
                     'assets/css/main.min.css': ['index.html']

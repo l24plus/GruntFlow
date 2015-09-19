@@ -252,17 +252,17 @@ var graffino = {
 
         // Fire after scroll stopped for 250ms
         function scrollStopped() {
-
+            // Do stuff
         }
 
         // Fire instantly (performance issue)
         function scrollInstantly() {
-
+            // Do stuff
         }
 
         // Fire on scroll in 250ms intervals
         function scrollThrottled() {
-
+            // Do stuff
         }
 
         // Initialize module
