@@ -168,6 +168,73 @@ module.exports = function(grunt) {
                 }
             }
         },
+        // Modernizr
+        modernizr: {
+            dist: {
+                'parseFiles': false,
+                'devFile': 'assets/js/plugins/modernizr.js',
+                'outputFile': 'assets/js/plugins/modernizr.js',
+                'extra': {
+                    'shiv': true,
+                    'printshiv': false,
+                    'load': true,
+                    'mq': false,
+                    'cssclasses': true
+                },
+                'extensibility': [
+                    'setClasses'
+                ],
+                'uglify': false,
+                'tests': [
+                    'canvas',
+                    'fullscreen-api',
+                    'hiddenscroll',
+                    'history',
+                    'htmlimports',
+                    'input',
+                    'inputsearchevent',
+                    'inputtypes',
+                    'lists-reversed',
+                    'requestanimationframe',
+                    'svg',
+                    'touchevents',
+                    'geolocation',
+                    'touchevents',
+                    'vibration',
+                    'a/download',
+                    'battery/lowbattery',
+                    'css/appearance',
+                    'css/backgroundblendmode',
+                    'css/backgroundcliptext',
+                    'css/backgroundposition-shorthand',
+                    'css/calc',
+                    'css/columns',
+                    'css/filters',
+                    'css/flexbox',
+                    'css/flexboxlegacy',
+                    'css/flexwrap',
+                    'css/invalid',
+                    'css/mask',
+                    'css/pointerevents',
+                    'css/positionsticky',
+                    'css/reflections',
+                    'css/transitions',
+                    'css/vhunit',
+                    'css/vmaxunit',
+                    'css/vminunit',
+                    'css/vwunit',
+                    'css/will-change',
+                    'forms/placeholder',
+                    'img/sizes',
+                    'img/srcset',
+                    'svg/asimg',
+                    'svg/filters',
+                    'svg/inline',
+                    'svg/svgclippaths',
+                    'video/autoplay',
+                ]
+            }
+        },
         // Post CSS
         postcss: {
             options: {
@@ -299,6 +366,18 @@ module.exports = function(grunt) {
             regExp: false
           }
         },
+        notify: {
+            default: {
+                options: {
+                    message: 'Grunt finished building the project.',
+                }
+            },
+            watch: {
+                options: {
+                    message: 'Grunt finished rebuilding the project.',
+                }
+            }
+        },
         // Run things in paralell
         concurrent: {
             stuff_to_run: ['stylus', 'concat:js'],
@@ -308,7 +387,7 @@ module.exports = function(grunt) {
             // Recompile Stylus
             stylus: {
                 files: ['assets/styl/**/*.styl'],
-                tasks: ['stylint', 'stylus', 'process-css'],
+                tasks: ['stylint', 'stylus', 'process-css', 'notify:watch'],
             },
             // Live reload CSS
             livereload: {
@@ -327,12 +406,12 @@ module.exports = function(grunt) {
             // Live optimize new images
             images: {
                 files: ['assets/images/src/**/*.png', 'assets/images/src/**/*.jpg'],
-                tasks: ['newer:imagemin:staging', 'newer:copy'],
+                tasks: ['newer:imagemin:staging', 'newer:copy', 'notify:watch'],
             },
             // Live generate new svgs
             sprites: {
                 files: ['assets/images/src/svg/**/*.svg'],
-                tasks: ['newer:svgmin', 'newer:copy', 'svg_sprite', 'stylus', 'process-css'],
+                tasks: ['newer:svgmin', 'newer:copy', 'svg_sprite', 'stylus', 'process-css', 'notify:watch'],
                 options: {
                     livereload: true,
                 },
@@ -340,7 +419,7 @@ module.exports = function(grunt) {
             // Live lint new scripts
             scripts: {
                 files: ['assets/js/modules/*.js', 'assets/js/plugins/*.js'],
-                tasks: ['jshint', 'concat:js', 'uglify'],
+                tasks: ['jshint', 'concat:js', 'uglify', 'notify:watch'],
                 options: {
                     spawn: false,
                     livereload: true,
@@ -349,8 +428,7 @@ module.exports = function(grunt) {
             // Live lint Grunt file
             gruntfile: {
                 files: 'Gruntfile.js',
-                tasks: ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'process-css', 'test', 'process-js', 'newer:imagemin:staging', 'newer:copy'],
-
+                tasks: ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'process-css', 'test', 'process-js', 'newer:imagemin:staging', 'newer:copy', 'notify:watch']
             },
             // Live lint HTML file
             html: {
@@ -428,12 +506,18 @@ module.exports = function(grunt) {
     // Grunt Concurrent
     grunt.loadNpmTasks('grunt-concurrent');
 
+    // Grunt Notify
+    grunt.loadNpmTasks('grunt-notify');
+    
+    // Grunt Modernizr
+    grunt.loadNpmTasks('grunt-modernizr');
+    
     /**
      * Run Grunt Tasks
      */
 
     // Default
-    grunt.registerTask('default', ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'process-css', 'test', 'process-js', 'newer:imagemin:staging', 'newer:copy', 'watch']);
+    grunt.registerTask('default', ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'process-css', 'test', 'process-js', 'newer:imagemin:staging', 'newer:copy', 'notify:default', 'watch']);
     // Staging
     grunt.registerTask('staging', ['bower', 'newer:svgmin', 'svg_sprite', 'stylus', 'process-css', 'process-js', 'newer:imagemin:staging', 'newer:copy']);
     // Production
@@ -453,7 +537,7 @@ module.exports = function(grunt) {
         grunt.task.run('replace');
         grunt.task.run('postcss');
         grunt.task.run('uncss');
-        // This is a workaround for postcss
+        // This is a workaround for uncss
         grunt.task.run('postcss');
     });
     
@@ -461,6 +545,7 @@ module.exports = function(grunt) {
      * Process JS
      */
     grunt.registerTask('process-js', 'Process JS', function() {
+        grunt.task.run('modernizr');
         grunt.task.run('concat:js');
         grunt.task.run('uglify');
     });

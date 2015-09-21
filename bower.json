@@ -19,7 +19,6 @@
   ],
   "devDependencies": {
     "jquery": "~2.1.4",
-    "modernizr": "~3.0.0",
     "h5Validate": "~0.9.0",
     "normalize.styl": "~3.0.3",
     "jeet": "~6.1.2",
