@@ -380,7 +380,7 @@ module.exports = function(grunt) {
         },
         // Run things in paralell
         concurrent: {
-            stuff_to_run: ['stylus', 'concat:js'],
+            stuff_to_run: ['process-css', 'process-js'],
         },
         // Watch for Changes
         watch: {
