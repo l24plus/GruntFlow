@@ -180,11 +180,11 @@ $h4 {
 
     &-make-menu {
         display: inline-block;
-        list-style: none;
-        padding-left: 0;
-        padding-right: 0;
         margin-top: 0;
         margin-bottom: 0;
+        padding-right: 0;
+        padding-left: 0;
+        list-style: none;
 
         li, ol { display: inline-block; }
     }
@@ -207,8 +207,8 @@ $h4 {
     &-float-right { float: right; }
 
     &-center {
-        margin-left: auto;
         margin-right: auto;
+        margin-left: auto;
     }
 
     &-no-padding { padding: 0; }
@@ -233,9 +233,9 @@ $h4 {
         &-parent {
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
             // IE flexbox Bug
             height: 100vh;
+            min-height: 100vh;
         }
         &-child {
             flex: 1 0 auto;
