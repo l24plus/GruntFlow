@@ -1,4 +1,4 @@
-# Font Subset Used
+#Font subset
 
 ## Available subset in all webfonts (Unicode):
 
