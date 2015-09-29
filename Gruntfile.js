@@ -171,17 +171,10 @@ module.exports = function(grunt) {
         // Modernizr
         modernizr: {
             dist: {
-                'parseFiles': false,
-                'devFile': 'assets/js/plugins/modernizr.js',
-                'outputFile': 'assets/js/plugins/modernizr.js',
-                'extra': {
-                    'shiv': true,
-                    'printshiv': false,
-                    'load': true,
-                    'mq': false,
-                    'cssclasses': true
-                },
-                'extensibility': [
+                'cache': true,
+                'crawl': false,
+                'dest': 'assets/js/plugins/modernizr.js',
+                'options': [
                     'setClasses'
                 ],
                 'uglify': false,
