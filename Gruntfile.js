@@ -162,6 +162,7 @@ module.exports = function(grunt) {
                     'h5Validate'       : 'jquery.h5validate.js',
                     'fontfaceobserver' : 'fontfaceobserver.js',
                     'slick.js'         : ['slick/slick.js', 'slick/slick.css'],
+                    'pointer-events'   : ['dist/pointer-events.min.js']
                 },
                 bowerOptions: {
                     relative   : false,
@@ -280,6 +281,17 @@ module.exports = function(grunt) {
                 },{
                     from: 'url("example@2x.png")',
                     to: ''
+                }]
+            },
+            criticalcss: {
+                src: ['assets/css/critical.css'],
+                dest: ['assets/css/critical.css'],
+                replacements: [{
+                    from: '../assets',
+                    to: 'assets'
+                },{
+                    from: '../images',
+                    to: 'assets/images'
                 }]
             }
         },
@@ -647,18 +659,18 @@ module.exports = function(grunt) {
         grunt.task.run('bower-install');
         grunt.task.run('bower_concat');
     });
-    // Install npm updates
+    // Install bower module updates
     grunt.registerTask('update-bower', 'Update bower.json and update bower modules', function() {
         grunt.log.writeln('If you get an error here, run "npm install -g npm-check-updates".');
         grunt.task.run('bower-write-new');
         grunt.task.run('bower-prune');
         grunt.task.run('bower-install');
     });
-    // Check for npm module updates
+    // Check for bower module updates
     grunt.registerTask('bower-check', 'Check for bower modules updates', function() {
         var done = this.async();
 
-        grunt.log.writeln('Checking for npm modules updates ...');
+        grunt.log.writeln('Checking for bower modules updates ...');
 
         grunt.util.spawn({
             cmd: 'ncu',
@@ -671,7 +683,7 @@ module.exports = function(grunt) {
             done();
         });
     });
-    // Write new versions to packages.json
+    // Write new versions to bower.json
     grunt.registerTask('bower-write-new', 'Write new versions to bower.json', function() {
         var done = this.async();
 
